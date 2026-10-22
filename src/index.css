@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Qorloop design tokens
+   Brand palette (client): Dark #031E1B · Deep Teal #06443D · Primary #027864
+   Accent #00D9A9 · Glow #00FFD2 · Light #8CFFE7 · Silver #D9D9D9 · Metallic #9EA4A8
+   The workspace stays light (teal-tinted neutrals); dark teal is used for the
+   sidebar and hero bands only, so the app never feels dark or gloomy.
+------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-brand-950: #031E1B;
+  --color-brand-900: #06443D;
+  --color-brand-700: #027864;
+  --color-brand-600: #03967D;
+  --color-brand-500: #00D9A9;
+  --color-brand-400: #00FFD2;
+  --color-brand-200: #8CFFE7;
+  --color-brand-100: #E3FAF3;
+  --color-brand-50: #F1FBF8;
+  --color-canvas: #F2F7F6;
+
+  /* Teal-tinted neutrals replace Tailwind's default grays everywhere */
+  --color-gray-50: #F6FAF9;
+  --color-gray-100: #EDF3F2;
+  --color-gray-200: #E0EAE7;
+  --color-gray-300: #C9D8D4;
+  --color-gray-400: #93A9A4;
+  --color-gray-500: #6B807C;
+  --color-gray-600: #4F6662;
+  --color-gray-700: #34504B;
+  --color-gray-800: #1F3833;
+  --color-gray-900: #0B2B27;
+
+  --radius-lg: 0.625rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  --shadow-xs: 0 1px 2px rgba(3, 30, 27, 0.04), 0 6px 20px -12px rgba(3, 30, 27, 0.12);
+  --shadow-sm: 0 1px 2px rgba(3, 30, 27, 0.05), 0 10px 28px -14px rgba(3, 30, 27, 0.16);
+  --shadow-lg: 0 18px 40px -16px rgba(3, 30, 27, 0.28);
+  --shadow-2xl: 0 40px 80px -24px rgba(3, 30, 27, 0.45);
+}
+
+@layer base {
+  html, body { background: var(--color-canvas); }
+  body { font-feature-settings: "cv11", "ss01"; }
+  ::selection { background: #8CFFE7; color: #031E1B; }
+  input[type="checkbox"], input[type="radio"] { accent-color: #027864; }
+  :focus-visible { outline: 2px solid #00D9A9; outline-offset: 2px; }
+}
+
+@layer components {
+  /* Primary buttons get a subtle brand gradient + glow wherever the brand fill is used */
+  .bg-\[\#027864\] {
+    background-image: linear-gradient(135deg, #027864 0%, #03967D 100%);
+    box-shadow: 0 6px 16px -8px rgba(2, 120, 100, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  }
+  .bg-\[\#027864\]:hover { background-image: linear-gradient(135deg, #02604F 0%, #027864 100%); }
+
+  .q-sidebar {
+    background: radial-gradient(260px 260px at 20% -6%, rgba(0, 255, 210, 0.18), transparent 70%),
+      linear-gradient(180deg, #031E1B 0%, #05332E 55%, #06443D 100%);
+  }
+  .q-hero {
+    background: radial-gradient(420px 420px at 92% -30%, rgba(0, 255, 210, 0.32), transparent 70%),
+      radial-gradient(260px 260px at 62% 140%, rgba(0, 255, 210, 0.18), transparent 70%),
+      linear-gradient(115deg, #031E1B 0%, #06443D 55%, #027864 100%);
+  }
+  .q-glow-btn {
+    background: linear-gradient(135deg, #00D9A9, #00FFD2);
+    color: #031E1B;
+    box-shadow: 0 8px 22px -8px rgba(0, 255, 210, 0.8);
+  }
+}
+
+/* Keep product names readable in dense tables */
+@layer base {
+  td > .flex.items-center.gap-3 > div:last-child { min-width: 160px; }
+}
