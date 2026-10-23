@@ -65,7 +65,7 @@ export const MarkupsView: React.FC = () => {
       ? round2(exampleProduct.erpPrice)
       : applyRounding(applyRule(exampleProduct.erpPrice, defaultRule), rounding);
 
-  const overriddenProducts = products.filter((p) => p.priceRule || p.offerPrice !== undefined);
+  const overriddenProducts = products.filter((p) => p.priceRule);
 
   const handleSave = () => {
     updatePricingSettings({ defaultRule, rounding, marketplaceRules: markups });
@@ -100,7 +100,7 @@ export const MarkupsView: React.FC = () => {
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">Marketplace Price</h1>
           <p className="text-xs text-gray-500 mt-0.5">
             The price you sell at on marketplaces. Set it once — it applies to Talabat, Snoonu, Rafeeq and
-            Keeta. It can be above ERP (markup) or below it (offers).
+            Keeta.
           </p>
         </div>
 
@@ -350,12 +350,12 @@ export const MarkupsView: React.FC = () => {
             </div>
           </div>
 
-          {/* Product prices & offers */}
+          {/* Product prices */}
           <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-xs space-y-4">
             <div>
-              <h2 className="text-sm font-bold text-gray-900">Product prices and offers</h2>
+              <h2 className="text-sm font-bold text-gray-900">Product prices</h2>
               <p className="text-xs text-gray-500">
-                Products with their own price or a temporary offer. Edit from here or from the catalogue.
+                Products with their own price. Edit from here or from the catalogue.
               </p>
             </div>
 
@@ -383,14 +383,7 @@ export const MarkupsView: React.FC = () => {
                         </td>
                         <td className="py-3 px-3 text-right text-gray-700">{formatQar(p.erpPrice)}</td>
                         <td className="py-3 px-3 text-gray-700">
-                          {p.offerPrice !== undefined ? (
-                            <span>
-                              Offer {formatQar(p.offerPrice)}
-                              {p.offerUntil ? <span className="text-gray-400"> · until {p.offerUntil}</span> : null}
-                            </span>
-                          ) : (
-                            describeRule(p.priceRule)
-                          )}
+                          {describeRule(p.priceRule)}
                         </td>
                         <td className="py-3 px-3 text-right">
                           <div className="inline-flex items-center gap-1.5">
@@ -407,19 +400,12 @@ export const MarkupsView: React.FC = () => {
                           </button>
                           <button
                             onClick={() => {
-                              bulkUpdatePrices([p.id], {
-                                type: p.offerPrice !== undefined ? 'remove-offer' : 'reset',
-                                value: 0,
-                              });
-                              showToast(
-                                p.offerPrice !== undefined
-                                  ? `Offer removed for "${p.nameEn}"`
-                                  : `"${p.nameEn}" now follows the category / default rule`
-                              );
+                              bulkUpdatePrices([p.id], { type: 'reset', value: 0 });
+                              showToast(`"${p.nameEn}" now follows the category / default rule`);
                             }}
                             className="text-red-600 hover:underline"
                           >
-                            {p.offerPrice !== undefined ? 'End offer' : 'Reset'}
+                            Reset
                           </button>
                         </td>
                       </tr>
@@ -542,7 +528,6 @@ export const MarkupsView: React.FC = () => {
             <h3 className="font-bold uppercase tracking-wider text-gray-900">How the price is picked</h3>
             <ol className="space-y-2">
               {[
-                ['offer', 'Offer price', 'Temporary price, e.g. clearance or near expiry. Can be below ERP.'],
                 ['product', 'Product price', 'Set on a single product (exact price, % or + QAR).'],
                 ['category', 'Category rule', 'Applies to every product in the category.'],
                 ['default', 'Default rule', 'Everything else.'],
@@ -553,7 +538,7 @@ export const MarkupsView: React.FC = () => {
                   </span>
                   <div>
                     <div className="flex items-center gap-1.5 font-semibold text-gray-900">
-                      {title} <PriceSourceChip source={source as 'offer'} />
+                      {title} <PriceSourceChip source={source as 'product'} />
                     </div>
                     <div className="text-[11px] text-gray-500 leading-relaxed">{desc}</div>
                   </div>
@@ -579,12 +564,6 @@ export const MarkupsView: React.FC = () => {
             <div className="flex justify-between py-1">
               <span className="text-gray-500">Product prices</span>
               <span className="font-semibold text-gray-900">{products.filter((p) => p.priceRule).length}</span>
-            </div>
-            <div className="flex justify-between py-1">
-              <span className="text-gray-500">Active offers</span>
-              <span className="font-semibold text-gray-900">
-                {products.filter((p) => p.offerPrice !== undefined).length}
-              </span>
             </div>
           </div>
         </div>

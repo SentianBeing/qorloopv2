@@ -193,9 +193,6 @@ export const ProductDetailView: React.FC = () => {
                   <div className="text-gray-400">Price source</div>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <PriceSourceChip source={marketplacePrice.source} />
-                    {product.offerUntil && marketplacePrice.source === 'offer' && (
-                      <span className="text-[10px] text-gray-500">until {product.offerUntil}</span>
-                    )}
                   </div>
                 </div>
               </div>

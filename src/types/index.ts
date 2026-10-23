@@ -12,7 +12,6 @@ export type ViewType =
   | 'categories'
   | 'category-detail'
   | 'markups'
-  | 'category-mapping'
   | 'templates'
   | 'outputs-generate'
   | 'onboarding'
@@ -51,7 +50,7 @@ export interface MarketplaceStatus {
 // ---------------------------------------------------------------------------
 // Marketplace Price
 // One price the retailer sells at on every marketplace. It is resolved in this
-// order: offer price → product rule → category rule → (per-marketplace rule,
+// order: product rule → category rule → (per-marketplace rule,
 // advanced only) → default rule.
 // ---------------------------------------------------------------------------
 
@@ -68,7 +67,7 @@ export interface PriceRule {
   value: number;
 }
 
-export type PriceSource = 'offer' | 'product' | 'category' | 'marketplace' | 'default';
+export type PriceSource = 'product' | 'category' | 'marketplace' | 'default';
 
 /** What price reports and generated files compare marketplaces against. */
 export type CompareReference = 'marketplace' | 'erp';
@@ -122,9 +121,6 @@ export interface Product {
   marketplaces: Record<MarketplaceId, MarketplaceStatus>;
   /** Product-level Marketplace Price rule (overrides category and default rules). */
   priceRule?: PriceRule;
-  /** Temporary offer price (clearance, near expiry). Can be below ERP. Wins over every rule. */
-  offerPrice?: number;
-  offerUntil?: string;
 }
 
 export interface CategoryItem {

@@ -467,12 +467,6 @@ export const CategoryDetailView: React.FC = () => {
           <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-xs space-y-3 text-xs">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-gray-900">Marketplaces (3)</h3>
-              <button
-                onClick={() => navigate('category-mapping')}
-                className="text-[11px] font-semibold text-[#027864] hover:underline"
-              >
-                Manage
-              </button>
             </div>
 
             <div className="space-y-2">

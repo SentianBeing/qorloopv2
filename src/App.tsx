@@ -19,7 +19,6 @@ import { MarkupsView } from './components/views/MarkupsView';
 import { TemplatesView } from './components/views/TemplatesView';
 import { SettingsView } from './components/views/SettingsView';
 import { UploadsHistoryView } from './components/views/UploadsHistoryView';
-import { CategoryMappingView } from './components/views/CategoryMappingView';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 import { useDemo } from './demo';
 import { LoginView } from './components/views/LoginView';
@@ -73,8 +72,6 @@ const MainContent: React.FC = () => {
         return <GenerateFilesView />;
       case 'markups':
         return <MarkupsView />;
-      case 'category-mapping':
-        return <CategoryMappingView />;
       case 'templates':
         return <TemplatesView />;
       case 'settings':

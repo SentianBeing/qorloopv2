@@ -3,7 +3,7 @@ import { CategoryPriceRule, PriceRule, PricingSettings, Product } from '../types
 /**
  * Marketplace Price seed data for the demo.
  * One default rule applies to every marketplace (price parity). Category and
- * product rules override it; offers win over everything.
+ * product rules override it.
  */
 export const INITIAL_PRICING_SETTINGS: PricingSettings = {
   defaultRule: { mode: 'percent', value: 10 },
@@ -24,12 +24,9 @@ export const INITIAL_CATEGORY_PRICE_RULES: CategoryPriceRule[] = [
   { id: 'cpr-3', category: 'Cooking & Baking', rule: { mode: 'same', value: 0 } },
 ];
 
-/** Product-level prices and offers applied on top of INITIAL_PRODUCTS. */
-export const PRODUCT_PRICE_SEED: Record<
-  string,
-  { priceRule?: PriceRule; offerPrice?: number; offerUntil?: string }
-> = {
-  '987657': { priceRule: { mode: 'fixed', value: 1.9 }, offerPrice: 1.5, offerUntil: '25 Oct 2026' }, // Laban near expiry
+/** Product-level prices applied on top of INITIAL_PRODUCTS. */
+export const PRODUCT_PRICE_SEED: Record<string, { priceRule?: PriceRule }> = {
+  '987657': { priceRule: { mode: 'fixed', value: 1.9 } }, // Laban
   '987658': { priceRule: { mode: 'fixed', value: 3.5 } }, // Snickers
   '987660': { priceRule: { mode: 'same', value: 0 } }, // Coca-Cola 1.5L
   '987661': { priceRule: { mode: 'same', value: 0 } }, // Nescafe

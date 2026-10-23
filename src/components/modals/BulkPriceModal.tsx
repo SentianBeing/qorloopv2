@@ -59,7 +59,6 @@ export const BulkPriceModal: React.FC<BulkPriceModalProps> = ({
   const [category, setCategory] = useState<string>(initialCategory || categories[0] || '');
   const [actionType, setActionType] = useState<BulkPriceActionType>('percent');
   const [value, setValue] = useState<string>('10');
-  const [offerUntil, setOfferUntil] = useState<string>('');
   const [parsed, setParsed] = useState<ParsedPriceFile | null>(null);
   const [fileName, setFileName] = useState<string>('');
   const fileRef = useRef<HTMLInputElement>(null);
@@ -82,14 +81,14 @@ export const BulkPriceModal: React.FC<BulkPriceModalProps> = ({
       const current = resolveMarketplacePrice(p, pricingSettings, categoryPriceRules).price;
       const patch = getBulkPatch(
         p,
-        { type: actionType, value: needsValue ? numericValue : 0, offerUntil },
+        { type: actionType, value: needsValue ? numericValue : 0 },
         pricingSettings,
         categoryPriceRules
       );
       const next = resolveMarketplacePrice({ ...p, ...patch }, pricingSettings, categoryPriceRules).price;
       return { product: p, current, next };
     });
-  }, [targets, actionType, numericValue, needsValue, valueValid, offerUntil, pricingSettings, categoryPriceRules]);
+  }, [targets, actionType, numericValue, needsValue, valueValid, pricingSettings, categoryPriceRules]);
 
   const changedCount = preview.filter((r) => Math.abs(r.next - r.current) >= 0.005).length;
 
@@ -112,7 +111,7 @@ export const BulkPriceModal: React.FC<BulkPriceModalProps> = ({
     if (!valueValid || targets.length === 0) return;
     bulkUpdatePrices(
       targets.map((p) => p.id),
-      { type: actionType, value: needsValue ? numericValue : 0, offerUntil: offerUntil || undefined }
+      { type: actionType, value: needsValue ? numericValue : 0 }
     );
     showToast(
       single
@@ -244,7 +243,7 @@ export const BulkPriceModal: React.FC<BulkPriceModalProps> = ({
                       setActionType(t);
                       if (t === 'percent') setValue('10');
                       else if (t === 'amount' || t === 'adjust') setValue('1.00');
-                      else if (t === 'fixed' || t === 'offer') setValue(single ? formatQar(preview[0]?.current) : '');
+                      else if (t === 'fixed') setValue(single ? formatQar(preview[0]?.current) : '');
                     }}
                     className="w-full border border-gray-200 rounded-lg p-2 text-xs bg-white text-gray-700"
                   >
@@ -271,19 +270,6 @@ export const BulkPriceModal: React.FC<BulkPriceModalProps> = ({
                   </div>
                 )}
               </div>
-
-              {actionType === 'offer' && (
-                <div className="space-y-1">
-                  <div className="font-semibold text-gray-900">Offer valid until (optional)</div>
-                  <input
-                    type="text"
-                    placeholder="e.g. 25 Oct 2026"
-                    value={offerUntil}
-                    onChange={(e) => setOfferUntil(e.target.value)}
-                    className="w-48 border border-gray-200 rounded-lg p-2 text-xs"
-                  />
-                </div>
-              )}
 
               {actionType === 'adjust' && (
                 <div className="flex items-start gap-2 p-2.5 rounded-lg bg-blue-50/70 text-blue-900 border border-blue-100">

@@ -63,7 +63,7 @@ export interface ResolvedPrice {
 
 /**
  * Marketplace Price for a product.
- * Order: offer → product rule → category rule → per-marketplace rule (advanced only) → default rule.
+ * Order: product rule → category rule → per-marketplace rule (advanced only) → default rule.
  */
 export const resolveMarketplacePrice = (
   product: Product,
@@ -71,9 +71,6 @@ export const resolveMarketplacePrice = (
   categoryRules: CategoryPriceRule[],
   marketplace?: MarketplaceId
 ): ResolvedPrice => {
-  if (product.offerPrice !== undefined && product.offerPrice !== null) {
-    return { price: round2(product.offerPrice), source: 'offer' };
-  }
   if (product.priceRule) {
     return {
       price: priceFromRule(product.erpPrice, product.priceRule, settings.rounding),
@@ -135,7 +132,6 @@ export const describeRule = (rule?: PriceRule): string => {
 };
 
 export const SOURCE_LABELS: Record<PriceSource, string> = {
-  offer: 'Offer',
   product: 'Product',
   category: 'Category',
   marketplace: 'Marketplace',
@@ -143,7 +139,6 @@ export const SOURCE_LABELS: Record<PriceSource, string> = {
 };
 
 export const SOURCE_STYLES: Record<PriceSource, string> = {
-  offer: 'bg-amber-50 text-amber-800 border-amber-200',
   product: 'bg-purple-50 text-purple-700 border-purple-200',
   category: 'bg-blue-50 text-blue-700 border-blue-200',
   marketplace: 'bg-orange-50 text-orange-700 border-orange-200',
@@ -207,14 +202,11 @@ export type BulkPriceActionType =
   | 'fixed'
   | 'same'
   | 'adjust'
-  | 'offer'
-  | 'remove-offer'
   | 'reset';
 
 export interface BulkPriceAction {
   type: BulkPriceActionType;
   value: number;
-  offerUntil?: string;
 }
 
 export const BULK_ACTION_LABELS: Record<BulkPriceActionType, string> = {
@@ -223,13 +215,11 @@ export const BULK_ACTION_LABELS: Record<BulkPriceActionType, string> = {
   fixed: 'Set exact price (QAR)',
   same: 'Same as ERP price',
   adjust: 'Increase / decrease current price by (QAR)',
-  offer: 'Set offer price (QAR)',
-  'remove-offer': 'Remove offer price',
   reset: 'Reset to category / default rule',
 };
 
 export const bulkActionNeedsValue = (type: BulkPriceActionType) =>
-  !(type === 'same' || type === 'remove-offer' || type === 'reset');
+  !(type === 'same' || type === 'reset');
 
 /** Fields to change on a product for a bulk action. */
 export const getBulkPatch = (
@@ -246,17 +236,9 @@ export const getBulkPatch = (
     case 'same':
       return { priceRule: { mode: 'same', value: 0 } };
     case 'adjust': {
-      const base = resolveMarketplacePrice(
-        { ...product, offerPrice: undefined },
-        settings,
-        categoryRules
-      ).price;
+      const base = resolveMarketplacePrice(product, settings, categoryRules).price;
       return { priceRule: { mode: 'fixed', value: round2(Math.max(0, base + action.value)) } };
     }
-    case 'offer':
-      return { offerPrice: round2(action.value), offerUntil: action.offerUntil || undefined };
-    case 'remove-offer':
-      return { offerPrice: undefined, offerUntil: undefined };
     case 'reset':
     default:
       return { priceRule: undefined };
